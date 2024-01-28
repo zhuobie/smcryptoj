@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github</groupId>
+    <artifactId>smcryptoj</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.1</version>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.basedir}/src/main/resources/win32-x86-64">
+                                    <fileset dir="${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/target/release">
+                                        <include name="*.dll"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${project.basedir}/src/main/resources/linux-x86-64">
+                                    <fileset dir="${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/target/release">
+                                        <include name="*.so"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>cargo-build</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <environmentVariables>
+                                <CARGO_HOME>${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/.cargo</CARGO_HOME>
+                            </environmentVariables>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <executable>cargo</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>--release</argument>
+                                <argument>--manifest-path=${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/Cargo.toml</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cargo-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>cargo</executable>
+                            <workingDirectory>${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto</workingDirectory>
+                            <arguments>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
