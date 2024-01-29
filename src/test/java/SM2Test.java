@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.github.zhuobie.sm2.SM2.*;
+import static dev.yumeng.sm2.SM2.*;
 
 public class SM2Test {
     @Test

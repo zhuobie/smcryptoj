@@ -4,15 +4,43 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github</groupId>
+    <groupId>dev.yumeng</groupId>
     <artifactId>smcryptoj</artifactId>
-    <version>1.0</version>
+    <version>0.1.0</version>
+    <packaging>jar</packaging>
+
+    <name>smcryptoj</name>
+    <description>China's Standards of Encryption Algorithms(SM2/SM3/SM4)</description>
+    <url>https://github.com/zhuobie/smcryptoj</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Yu Meng</name>
+            <email>610074@gmail.com</email>
+            <organization>SWUFE</organization>
+            <organizationUrl>https://www.swufe.edu.cn/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/zhuobie/smcryptoj.git</connection>
+        <developerConnection>scm:git:ssh://github.com:zhuobie/smcryptoj.git</developerConnection>
+        <url>https://github.com/zhuobie/smcryptoj/tree/main</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.java.dev.jna</groupId>
@@ -38,12 +66,12 @@
                         <configuration>
                             <target>
                                 <copy todir="${project.basedir}/src/main/resources/win32-x86-64">
-                                    <fileset dir="${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/target/release">
+                                    <fileset dir="${project.basedir}/src/main/rust/dev/yumeng/smcrypto/target/release">
                                         <include name="*.dll"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${project.basedir}/src/main/resources/linux-x86-64">
-                                    <fileset dir="${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/target/release">
+                                    <fileset dir="${project.basedir}/src/main/rust/dev/yumeng/smcrypto/target/release">
                                         <include name="*.so"/>
                                     </fileset>
                                 </copy>
@@ -68,14 +96,14 @@
                         </goals>
                         <configuration>
                             <environmentVariables>
-                                <CARGO_HOME>${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/.cargo</CARGO_HOME>
+                                <CARGO_HOME>${project.basedir}/src/main/rust/dev/yumeng/smcrypto/.cargo</CARGO_HOME>
                             </environmentVariables>
                             <workingDirectory>${project.basedir}</workingDirectory>
                             <executable>cargo</executable>
                             <arguments>
                                 <argument>build</argument>
                                 <argument>--release</argument>
-                                <argument>--manifest-path=${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto/Cargo.toml</argument>
+                                <argument>--manifest-path=${project.basedir}/src/main/rust/dev/yumeng/smcrypto/Cargo.toml</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -87,7 +115,7 @@
                         </goals>
                         <configuration>
                             <executable>cargo</executable>
-                            <workingDirectory>${project.basedir}/src/main/rust/com/github/zhuobie/smcrypto</workingDirectory>
+                            <workingDirectory>${project.basedir}/src/main/rust/dev/yumeng/smcrypto</workingDirectory>
                             <arguments>
                                 <argument>clean</argument>
                             </arguments>
@@ -95,6 +123,63 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.3.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

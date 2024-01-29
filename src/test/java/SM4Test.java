@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.github.zhuobie.sm4.SM4.*;
+import static dev.yumeng.sm4.SM4.*;
 
 public class SM4Test {
     @Test

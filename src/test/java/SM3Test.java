@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.github.zhuobie.sm3.SM3.*;
+import static dev.yumeng.sm3.SM3.*;
 
 public class SM3Test {
     @Test
