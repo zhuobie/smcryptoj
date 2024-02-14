@@ -370,7 +370,7 @@ pub extern "C" fn encrypt_c1c2c3(
     };
     let public_key_rs = public_key_c.to_str().expect("not a valid utf-8 string");
     let enc_ctx = sm2::Encrypt::new(public_key_rs);
-    let mut enc_data = enc_ctx.encrypt(data_c);
+    let mut enc_data = enc_ctx.encrypt_c1c2c3(data_c);
     enc_data.shrink_to_fit();
     let ptr = enc_data.as_ptr() as *mut c_uchar;
     unsafe {
@@ -395,7 +395,7 @@ pub extern "C" fn decrypt_c1c2c3(
     };
     let private_key_rs = private_key_c.to_str().expect("not a valid utf-8 string");
     let dec_ctx = sm2::Decrypt::new(private_key_rs);
-    let mut dec_data = dec_ctx.decrypt(data_c);
+    let mut dec_data = dec_ctx.decrypt_c1c2c3(data_c);
     dec_data.shrink_to_fit();
     let ptr = dec_data.as_ptr() as *mut c_uchar;
     unsafe {
@@ -420,7 +420,7 @@ pub extern "C" fn encrypt_asna1(
     };
     let public_key_rs = public_key_c.to_str().expect("not a valid utf-8 string");
     let enc_ctx = sm2::Encrypt::new(public_key_rs);
-    let mut enc_data = enc_ctx.encrypt(data_c);
+    let mut enc_data = enc_ctx.encrypt_asna1(data_c);
     enc_data.shrink_to_fit();
     let ptr = enc_data.as_ptr() as *mut c_uchar;    
     unsafe {
@@ -445,7 +445,7 @@ pub extern "C" fn decrypt_asna1(
     };
     let private_key_rs = private_key_c.to_str().expect("not a valid utf-8 string");
     let dec_ctx = sm2::Decrypt::new(private_key_rs);
-    let mut dec_data = dec_ctx.decrypt(data_c);
+    let mut dec_data = dec_ctx.decrypt_asna1(data_c);
     dec_data.shrink_to_fit();
     let ptr = dec_data.as_ptr() as *mut c_uchar;
     unsafe {
