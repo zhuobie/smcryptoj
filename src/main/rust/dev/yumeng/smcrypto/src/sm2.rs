@@ -262,10 +262,27 @@ fn kg(k: BigUint, point: &str) -> Point {
     convert_jacb_to_nor(temp)
 }
 
+/// Check whether the private key is legal.
+pub fn privkey_valid(private_key: &str) -> bool {
+    let re = regex::Regex::new(r"^[0-9a-fA-F]{64}$").unwrap();
+    re.is_match(private_key)
+}
+
 /// Check whether the public key is legal. The input public key may or may not contain the "04" prefix.
 
-pub fn pubkey_valid(public_key: &str) -> bool {    
+pub fn pubkey_valid(public_key: &str) -> bool {
+    let public_key_len = public_key.len();
+    if public_key_len != 128 && public_key_len != 130 {
+        return false;
+    }
+    if public_key_len == 130 && &public_key[0..2] != "04" {
+        return false;
+    }
     let public_key = pubkey_trim(public_key);
+    let re = regex::Regex::new(r"^[0-9a-fA-F]{128}$").unwrap();
+    if !re.is_match(&public_key) {
+        return false;
+    }
     let x: &str = &public_key[0..64];
     let y: &str = &public_key[64..128];
     let x = BigUint::from_str_radix(x, 16).unwrap();
@@ -276,6 +293,20 @@ pub fn pubkey_valid(public_key: &str) -> bool {
     let np0 = kg(BigUint::from_str_radix(*ECC_N, 16).unwrap(), &public_key) == Point {x: BigUint::zero(), y: BigUint::zero(), z: BigUint::zero()};
     let on_curve = (&y * &y) % &p == (&x * &x * &x + &a * &x + &b) % &p;
     np0 && on_curve
+}
+
+/// Check whether a hex string is legal.
+pub fn hex_valid(input: &str) -> bool {
+    let re = regex::Regex::new(r"^[0-9a-fA-F]+$").unwrap();
+    re.is_match(input)
+}
+
+/// Check whether a base64 string is legal.
+pub fn base64_valid(input: &str) -> bool {
+    match base64::decode(input) {
+        Ok(_) => true,
+        Err(_) => false,
+    }
 }
 
 fn pubkey_trim<'a>(public_key: &'a str) -> Cow<'a, str> {

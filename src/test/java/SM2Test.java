@@ -40,6 +40,8 @@ public class SM2Test {
         var keyexchange_2a = keyexchange_2a(id_a, ska, keyexchange_a.private_key_r, keyexchange_b.data);
         var keyexchange_2b = keyexchange_2b(id_b, skb, keyexchange_b.private_key_r, keyexchange_a.data);
         assertEquals(keyexchange_2a.k, keyexchange_2b.k);
+        System.out.println(keyexchange_2a.k);
+        System.out.println(keyexchange_2b.k);
 
         // encrypt_c1c2c3 and decrypt_c1c2c3
         enc = encrypt_c1c2c3(data, keypair.public_key);

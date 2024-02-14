@@ -71,6 +71,19 @@ pub extern "C" fn pk_from_sk(private_key: *const c_char) -> *mut c_char {
 }
 
 #[no_mangle]
+pub extern "C" fn privkey_valid(private_key: *const c_char) -> c_int {
+    let private_key_c = {
+        assert!(!private_key.is_null());
+        unsafe { CStr::from_ptr(private_key) }
+    };
+    let private_key_rs = private_key_c.to_str().expect("not a valid utf-8 string");
+    match sm2::privkey_valid(private_key_rs) {
+        true => 1,
+        false => 0,
+    }
+}
+
+#[no_mangle]
 pub extern "C" fn pubkey_valid(public_key: *const c_char) -> c_int {
     let public_key_c = {
         assert!(!public_key.is_null());
@@ -78,6 +91,32 @@ pub extern "C" fn pubkey_valid(public_key: *const c_char) -> c_int {
     };
     let public_key_rs = public_key_c.to_str().expect("not a valid utf-8 string");
     match sm2::pubkey_valid(public_key_rs) {
+        true => 1,
+        false => 0,
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn hex_valid(input: *const c_char) -> c_int {
+    let input_c = {
+        assert!(!input.is_null());
+        unsafe { CStr::from_ptr(input) }
+    };
+    let input_rs = input_c.to_str().expect("not a valid utf-8 string");
+    match sm2::hex_valid(input_rs) {
+        true => 1,
+        false => 0,
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn base64_valid(input: *const c_char) -> c_int {
+    let input_c = {
+        assert!(!input.is_null());
+        unsafe { CStr::from_ptr(input) }
+    };
+    let input_rs = input_c.to_str().expect("not a valid utf-8 string");
+    match sm2::base64_valid(input_rs) {
         true => 1,
         false => 0,
     }
